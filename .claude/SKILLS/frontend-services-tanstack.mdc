@@ -1,0 +1,39 @@
+---
+description: Frontend services layout and TanStack Query
+globs:
+  - src/services/**/*
+  - src/views/**/*
+  - src/components/**/*
+alwaysApply: false
+---
+
+# Services and TanStack Query
+
+## File roles under `src/services/<domain>/`
+
+| File | Role |
+|------|------|
+| `*.type.ts` | IDs, DTOs, arg types shared by UI and hooks |
+| `*.query.ts` | Async adapters only: call `apiClient` / crypto helpers. **No** `useQuery` / `useMutation`. |
+| `*.hook.ts` | TanStack Query hooks, stable `queryKey`s, `invalidateQueries` on mutation success |
+| `*.mock.ts` | Same async shapes as real adapters for dev toggles |
+| `index.ts` | Re-export public surface |
+
+`queryFn` / `mutationFn` should call functions from `*.query.ts` (or shared libs), not embed transport logic in the hook.
+
+## Imports
+
+- **Views and app hooks** (`src/views/`, `src/components/`, `src/hooks/`): import from `@/services/<domain>` barrels when the symbol is exported there.
+- **Inside `services/`**: deep imports (e.g. `auth/hooks/auth.hook`, `auth/adapters/*.query`) are OK when needed to **avoid circular imports** through barrels.
+
+## `useDocumentsQuery` from `documents/index`
+
+`useDocumentsQuery` is re-exported from `documents.query` as an intentional escape hatch for non-React callers (e.g. key rotation). Prefer domain hooks (`useDocumentsListQuery`, etc.) in UI.
+
+## `useEffect`
+
+Last resort. If used to sync with a real external system (storage, i18n runtime, window media), add a short comment explaining why render/events cannot own it.
+
+## `*.mock.ts`
+
+Dev-only; do not treat as the API contract (see testing rule).

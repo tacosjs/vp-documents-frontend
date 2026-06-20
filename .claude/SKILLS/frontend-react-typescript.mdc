@@ -1,0 +1,31 @@
+---
+description: Frontend TypeScript and React component style
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React + TypeScript (frontend)
+
+## Types and exports
+
+- Use `type` for props, DTOs, and unions. Use `interface` only for generated code (e.g. `routeTree.gen.ts`) or TanStack Router `Register` augmentation in `router.tsx`.
+- Components and hooks: `export const Name = (...) => { ... }` (arrow functions). Avoid `export function` for UI unless a framework entry requires it.
+- Prefer **named exports**. `export default` only where the framework demands it (e.g. NotFound route, devtools object).
+- Use `import type { ... }` for compile-time-only symbols. When a module exports both types and values, use a separate `import type` line plus a value import (this repo’s ESLint disallows inline `import { type X }` with values in the same specifier list).
+
+## Bad / good
+
+```tsx
+// BAD — interface for a component props bag
+export interface CardProps { title: string }
+
+// GOOD
+export type CardProps = { title: string }
+export const Card = (props: CardProps) => { ... }
+
+// GOOD — type + value from same module
+import type { Me } from '@/services/auth'
+import { useMeQuery } from '@/services/auth'
+```
+
+Do not reformat third-party-style files under `components/ui/` unless changing behavior.

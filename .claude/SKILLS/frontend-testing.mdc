@@ -1,0 +1,35 @@
+---
+description: Frontend testing conventions (Vitest, RTL)
+globs:
+  - **/*.test.ts
+  - **/*.test.tsx
+  - **/__test__/**
+  - **/__tests__/**
+alwaysApply: false
+---
+
+# Frontend testing
+
+## What to test
+
+1. **Pure units** — `src/lib/`, crypto helpers, parsers (fast, no DOM).
+2. **Real `*.query.ts` adapters** — primary HTTP/API contract: paths, methods, parsing, error mapping. Mock at the boundary (`vi.mock('@/lib/http/apiClient', ...)`) or use **MSW** later for multi-step flows.
+3. **Hooks** — `renderHook` + `QueryClientProvider` (+ providers like `EncryptionSessionProvider` when needed). Assert behavior, not mock-module internals.
+4. **Components** — sparingly: forms, a11y-critical UI. Thin views that only compose hooks are lower ROI.
+5. **E2E (optional later)** — Add Playwright (or Cypress) only for a small set of user journeys (e.g. sign-in, document create) when Vitest/RTL is not enough.
+
+**Future integration tests:** Consider **MSW** when a flow hits many endpoints and `vi.mock('@/lib/http/apiClient')` becomes noisy; keep handlers close to the scenarios they serve.
+
+## What not to prioritize
+
+- **Do not add dedicated tests for `*.mock.ts`.** Mocks are dev toggles; the contract is the real query layer.
+
+## File placement
+
+- Prefer **co-located** `*.test.ts` / `*.test.tsx` next to the module under test (e.g. `services/auth/hooks/useSignOut.test.tsx`, `hooks/auth.helpers.test.ts`).
+- Under **`src/lib/`**, when there are several tests for different modules, group them in **`src/lib/__test__/`** (e.g. `crypto.test.ts`, `waitFor.test.ts`) instead of scattering at `lib/` root.
+- Use `src/__tests__/` only for **cross-cutting** integration tests that do not belong to a single feature folder.
+
+## Stack
+
+Vitest + jsdom + `@testing-library/react`. Shared DOM matchers: `src/test/setup.ts` (jest-dom) via Vitest `setupFiles`.
