@@ -1,5 +1,5 @@
 {
-  "name": "e2ee-base",
+  "name": "vp-documents-app",
   "private": true,
   "type": "module",
   "scripts": {

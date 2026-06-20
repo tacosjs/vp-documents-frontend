@@ -1,5 +1,5 @@
 {
-  "projectName": "e2ee-base",
+  "projectName": "vp-documents-app",
   "mode": "file-router",
   "typescript": true,
   "packageManager": "npm",

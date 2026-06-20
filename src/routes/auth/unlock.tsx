@@ -8,7 +8,7 @@ import { useMeQuery } from '@/services/auth'
 import { RoutesPath } from '@/types/routes'
 import { UnlockView } from '@/views/AuthViews/UnlockView'
 
-export const Route = createFileRoute(RoutesPath.UNLOCK)({
+export const Route = createFileRoute('/auth/unlock')({
   component: RouteComponent,
 })
 

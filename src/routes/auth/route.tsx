@@ -1,8 +1,6 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 
-import { RoutesPath } from '@/types/routes'
-
-export const Route = createFileRoute(RoutesPath.AUTH_ROOT)({
+export const Route = createFileRoute('/auth')({
   component: AuthSegmentLayout,
 })
 

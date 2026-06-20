@@ -2,10 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Layout } from '@/components/Layouts'
 import { ProtectedRoutes } from '@/components/ProtectedRoutes'
-import { RoutesPath } from '@/types/routes'
 import { UserProfileView } from '@/views/SettingsViews'
 
-export const Route = createFileRoute(RoutesPath.SETTINGS_PROFILE)({
+export const Route = createFileRoute('/settings/profile')({
   component: RouteComponent,
 })
 

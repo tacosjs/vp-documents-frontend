@@ -41,7 +41,7 @@ export async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
       body &&
       typeof body === 'object' &&
       'error' in body &&
-      typeof (body).error === 'string'
+      typeof body.error === 'string'
         ? (body as { error: string }).error
         : res.statusText
     throw new ApiHttpError(res.status, msg)

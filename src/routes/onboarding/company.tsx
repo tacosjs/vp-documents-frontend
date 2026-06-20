@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { ProtectedRoutes } from '@/components/ProtectedRoutes'
-import { RoutesPath } from '@/types/routes'
 import { OnboardingCompanyView } from '@/views/OnboardingCompanyView'
 
-export const Route = createFileRoute(RoutesPath.ONBOARDING_COMPANY)({
+export const Route = createFileRoute('/onboarding/company')({
   component: RouteComponent,
 })
 

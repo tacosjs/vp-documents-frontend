@@ -1,14 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { AuthGuestCardRoute } from '@/components/Layouts/AuthGuestCardRoute'
-import { RoutesPath } from '@/types/routes'
 import { SignUpView } from '@/views/AuthViews/SignUpView'
 
 type SignUpSearch = {
   invite?: string
 }
 
-export const Route = createFileRoute(RoutesPath.SIGN_UP)({
+export const Route = createFileRoute('/auth/signup')({
   component: RouteComponent,
   validateSearch: (raw: Record<string, unknown>): SignUpSearch => ({
     invite:

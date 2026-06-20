@@ -1,14 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { AuthGuestCardRoute } from '@/components/Layouts/AuthGuestCardRoute'
-import { RoutesPath } from '@/types/routes'
 import { SignInView } from '@/views/AuthViews/SignInView'
 
 type SignInSearch = {
   redirect?: string
 }
 
-export const Route = createFileRoute(RoutesPath.SIGN_IN)({
+export const Route = createFileRoute('/auth/signin')({
   component: RouteComponent,
   validateSearch: (raw: Record<string, unknown>): SignInSearch => {
     const redirect =
