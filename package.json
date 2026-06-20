@@ -1,6 +1,7 @@
 {
   "name": "vp-documents-app",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "type": "module",
   "scripts": {
     "start": "npm run dev",
