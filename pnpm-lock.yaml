@@ -14,6 +14,9 @@ importers:
       '@t3-oss/env-core':
         specifier: ^0.13.11
         version: 0.13.11(typescript@6.0.3)(zod@4.4.3)
+      '@tacosjs/vp-documents-api':
+        specifier: 0.1.0-alpha.b630c4e
+        version: 0.1.0-alpha.b630c4e
       '@tailwindcss/vite':
         specifier: ^4.3.1
         version: 4.3.1(vite@8.0.16(@types/node@26.0.0)(esbuild@0.27.7)(jiti@2.7.0))
@@ -1843,6 +1846,9 @@ packages:
         optional: true
       zod:
         optional: true
+
+  '@tacosjs/vp-documents-api@0.1.0-alpha.b630c4e':
+    resolution: {integrity: sha512-y3HVo2GmdMtLpmv/6vPUHBZ+keVZchse/wuPl8/1yHT2eioPEAtKUGqNRpjzII0K3gUKgph04qMqStZHSyaqBQ==, tarball: https://npm.pkg.github.com/download/@tacosjs/vp-documents-api/0.1.0-alpha.b630c4e/c10ee23dc94a190395f26471946241dabee1c080}
 
   '@tailwindcss/node@4.3.1':
     resolution: {integrity: sha512-6NDaqRoAMSXD1mr/RXu0HBvNE9a2n5tHPsxu9XHLws8o4Twes5rBM2205SUUiJ9goAtadrN6xTGX0UDEwp/N4A==}
@@ -5333,6 +5339,8 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
       zod: 4.4.3
+
+  '@tacosjs/vp-documents-api@0.1.0-alpha.b630c4e': {}
 
   '@tailwindcss/node@4.3.1':
     dependencies:
