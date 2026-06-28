@@ -11,7 +11,6 @@ export {
   fetchKeyHistory,
   fetchSecurityActivity,
   fetchUserKeys,
-  putUserKeys,
   rotateKeys,
 } from './userKeys.query'
 export type {

@@ -24,7 +24,7 @@ export async function createTenant(
   body: CreateTenantBody,
 ): Promise<TenantSummary> {
   const row = await apiJson<{ id: string; name: string; role: string }>(
-    '/api/tenants',
+    '/tenants',
     {
       body: JSON.stringify(body),
       method: 'POST',
@@ -37,22 +37,18 @@ export async function createInvitation(
   tenantId: string,
   body: CreateInvitationBody,
 ): Promise<CreateInvitationResult> {
-  return apiJson<CreateInvitationResult>(
-    `/api/tenants/${tenantId}/invitations`,
-    {
-      body: JSON.stringify(body),
-      method: 'POST',
-    },
-  )
+  return apiJson<CreateInvitationResult>(`/tenants/${tenantId}/invitations`, {
+    body: JSON.stringify(body),
+    method: 'POST',
+  })
 }
 
 export async function previewInvitation(
   token: string,
 ): Promise<InvitationPreview> {
-  return apiJson<InvitationPreview>('/api/invitations/preview', {
-    body: JSON.stringify({ token: token.trim() }),
-    method: 'POST',
-  })
+  return apiJson<InvitationPreview>(
+    `/invitations/${encodeURIComponent(token.trim())}/preview`,
+  )
 }
 
 function normalizeMemberRole(role: string): 'admin' | 'editor' {
@@ -60,10 +56,12 @@ function normalizeMemberRole(role: string): 'admin' | 'editor' {
 }
 
 export async function acceptInvitation(token: string): Promise<void> {
-  await apiJson<unknown>('/api/invitations/accept', {
-    body: JSON.stringify({ token: token.trim() }),
-    method: 'POST',
-  })
+  await apiJson<unknown>(
+    `/invitations/${encodeURIComponent(token.trim())}/accept`,
+    {
+      method: 'POST',
+    },
+  )
 }
 
 export async function listMembers(
@@ -81,7 +79,7 @@ export async function listMembers(
       accessValidated?: boolean
       hasOrganizationKeyWrap?: boolean
     }>
-  >(`/api/tenants/${tenantId}/members${suffix}`)
+  >(`/tenants/${tenantId}/members${suffix}`)
   return rows.map((row) => ({
     userId: row.userId,
     accessValidated: row.accessValidated ?? false,
@@ -92,22 +90,12 @@ export async function listMembers(
   }))
 }
 
-export async function validateMemberOrganizationAccess(
-  tenantId: string,
-  userId: string,
-): Promise<void> {
-  await apiJson<unknown>(
-    `/api/tenants/${tenantId}/members/${userId}/validate-organization-access`,
-    { method: 'POST' },
-  )
-}
-
 export async function patchMemberRole(
   tenantId: string,
   userId: string,
   body: PatchMemberRoleBody,
 ): Promise<void> {
-  await apiJson<unknown>(`/api/tenants/${tenantId}/members/${userId}`, {
+  await apiJson<unknown>(`/tenants/${tenantId}/members/${userId}/role`, {
     body: JSON.stringify(body),
     method: 'PATCH',
   })
@@ -117,7 +105,7 @@ export async function removeMember(
   tenantId: string,
   userId: string,
 ): Promise<void> {
-  await apiJson<unknown>(`/api/tenants/${tenantId}/members/${userId}`, {
+  await apiJson<unknown>(`/tenants/${tenantId}/members/${userId}`, {
     method: 'DELETE',
   })
 }

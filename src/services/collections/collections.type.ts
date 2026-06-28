@@ -1,3 +1,5 @@
+import type { components } from '@tacosjs/vp-documents-api'
+
 export type CollectionDto = {
   id: string
   createdByUserId: string
@@ -8,20 +10,5 @@ export type CollectionDto = {
   wrappedCollectionKey: string
 }
 
-export type OrganizationKeyRotatePayload = {
-  collectionRewraps: Array<{
-    collectionId: string
-    okKeyVersion: number
-    wrappedCollectionKey: string
-  }>
-  itemKeyRewraps: Array<{
-    documentId: string
-    wrappedItemKey: string
-    okKeyVersion?: number
-  }>
-  okKeyVersion: number
-  wrappings: Array<{
-    userId: string
-    wrappedTenantKey: string
-  }>
-}
+export type OrganizationKeyRotatePayload =
+  components['schemas']['ApplyOrgKeyRotationRequest']

@@ -42,7 +42,18 @@ export const DocumentSharedToggle = ({
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    await mutateAsync({ id: document.id, input: { shared: !document.shared } })
+    await mutateAsync({
+      id: document.id,
+      input: {
+        collectionId: null,
+        encryptedData: null,
+        encryptedHistoryPayload: null,
+        okKeyVersion: null,
+        shared: !document.shared,
+        wrappedItemKey: null,
+        wrapScheme: null,
+      },
+    })
   }
 
   return (

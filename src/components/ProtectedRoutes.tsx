@@ -12,7 +12,7 @@ export const ProtectedRoutes = ({
 }: {
   children: React.ReactNode
 }) => {
-  const { data: me, isPending } = useMeQuery()
+  const { data: me, isError, isPending } = useMeQuery()
   const { passphrase } = useEncryptionSession()
   const { waitingForDeviceRestore } = useDevicePassphraseRestore()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
@@ -31,7 +31,7 @@ export const ProtectedRoutes = ({
     )
   }
 
-  if (!me) {
+  if (!me || isError) {
     return <Navigate to={RoutesPath.SIGN_IN.toString()} />
   }
 

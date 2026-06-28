@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
 
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import {
@@ -33,11 +32,12 @@ const UserProfileForm = ({ me }: { me: Me }) => {
   const [email, setEmail] = useState(me.email)
   const patchMutation = usePatchMeMutation()
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault()
     patchMutation.mutate({
-      display_name: displayName,
+      displayName,
       email,
+      preferredLocale: null,
     })
   }
 

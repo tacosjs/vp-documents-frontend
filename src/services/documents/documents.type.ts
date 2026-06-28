@@ -1,3 +1,5 @@
+import type { components } from '@tacosjs/vp-documents-api'
+
 import type { DocumentWrapScheme } from '@/lib/crypto'
 
 /** Document row from documents API (camelCase JSON). */
@@ -19,25 +21,8 @@ export type Document = {
   wrapScheme: DocumentWrapScheme
 }
 
-export type CreateDocumentInput = {
-  collectionId?: string
-  encryptedData: string
-  wrapScheme: DocumentWrapScheme
-  encryptedHistoryPayload?: string
-  okKeyVersion?: number
-  shared?: boolean
-  wrappedItemKey?: string
-}
-
-export type PatchDocumentInput = {
-  collectionId?: string
-  encryptedData?: string
-  encryptedHistoryPayload?: string
-  okKeyVersion?: number
-  shared?: boolean
-  wrappedItemKey?: string
-  wrapScheme?: DocumentWrapScheme
-}
+export type CreateDocumentInput = components['schemas']['CreateDocumentRequest']
+export type PatchDocumentInput = components['schemas']['PatchDocumentRequest']
 
 export type DocumentVersion = {
   encryptedPayload: string

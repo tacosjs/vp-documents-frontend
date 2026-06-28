@@ -42,6 +42,7 @@ export const performOrganizationKeyRotation = async ({
   const wrappings = await Promise.all(
     withKeys.map(async (m) => ({
       userId: m.userId,
+      okKeyVersion: organizationKeyVersion,
       wrappedTenantKey: await wrapTenantSymmetricKeyForPublicKey(
         newTsk,
         m.publicKey,
@@ -49,7 +50,7 @@ export const performOrganizationKeyRotation = async ({
     })),
   )
 
-  const collections = await listCollections(tenantId)
+  const collections = await listCollections()
   const collectionRewraps = await Promise.all(
     collections.map(async (col) => {
       const ck = await unwrapRawKeyWithAes256Gcm(

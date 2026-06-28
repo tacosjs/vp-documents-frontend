@@ -20,11 +20,11 @@ export const AuthGuestCardRoute = ({ children }: AuthGuestCardRouteProps) => {
   }
 
   if (me && localPassphrase) {
-    return <Navigate to={RoutesPath.HOME.toString()} />
+    return <Navigate to="/" />
   }
 
   if (me && !localPassphrase) {
-    return <Navigate to={RoutesPath.UNLOCK.toString()} />
+    return <Navigate to="/auth/unlock" />
   }
 
   return (

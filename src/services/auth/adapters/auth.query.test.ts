@@ -7,10 +7,43 @@ import { fetchMe, patchMe } from './auth.query'
 
 vi.mock('@/lib/http/apiClient', () => ({
   apiJson: vi.fn(),
+  ApiHttpError: class ApiHttpError extends Error {
+    constructor(
+      public status: number,
+      message: string,
+    ) {
+      super(message)
+      this.name = 'ApiHttpError'
+    }
+  },
 }))
 
+describe('fetchMe', () => {
+  it('returns null on 401', async () => {
+    const { ApiHttpError, apiJson } = await import('@/lib/http/apiClient')
+    vi.mocked(apiJson).mockRejectedValueOnce(
+      new ApiHttpError(401, 'Unauthorized'),
+    )
+    expect(await fetchMe()).toBeNull()
+  })
+
+  it('returns null on 403', async () => {
+    const { ApiHttpError, apiJson } = await import('@/lib/http/apiClient')
+    vi.mocked(apiJson).mockRejectedValueOnce(new ApiHttpError(403, 'Forbidden'))
+    expect(await fetchMe()).toBeNull()
+  })
+
+  it('re-throws on other errors', async () => {
+    const { ApiHttpError, apiJson } = await import('@/lib/http/apiClient')
+    vi.mocked(apiJson).mockRejectedValueOnce(
+      new ApiHttpError(500, 'Server Error'),
+    )
+    await expect(fetchMe()).rejects.toThrow('Server Error')
+  })
+})
+
 describe('patchMe', () => {
-  it('includes preferred_locale in PATCH body', async () => {
+  it('includes preferredLocale in PATCH body', async () => {
     const { apiJson } = await import('@/lib/http/apiClient')
     vi.mocked(apiJson).mockResolvedValueOnce({
       display_name: null,
@@ -22,12 +55,20 @@ describe('patchMe', () => {
       user_id: 'u1',
     })
 
-    const me = await patchMe({ preferred_locale: 'fr' })
+    const me = await patchMe({
+      displayName: null,
+      email: null,
+      preferredLocale: 'fr',
+    })
 
     expect(me.preferredLocale).toBe('fr')
-    expect(apiJson).toHaveBeenCalledWith('/api/me', {
-      body: JSON.stringify({ preferred_locale: 'fr' }),
+    expect(apiJson).toHaveBeenCalledWith('/me', {
       method: 'PATCH',
+      body: JSON.stringify({
+        displayName: null,
+        email: null,
+        preferredLocale: 'fr',
+      }),
     })
   })
 

@@ -211,6 +211,7 @@ const DecryptedContent = ({ document }: { document: Document }) => {
     await updateMutation.mutateAsync({
       id: document.id,
       input: {
+        collectionId: null,
         encryptedData: enc,
         encryptedHistoryPayload: histEnc,
         okKeyVersion,

@@ -6,7 +6,6 @@ export {
   usePatchMemberRoleMutation,
   useRemoveMemberMutation,
   useTenantMembersQuery,
-  useValidateMemberOrganizationAccessMutation,
 } from './tenants.hook'
 
 export {
@@ -17,7 +16,6 @@ export {
   patchMemberRole,
   previewInvitation,
   removeMember,
-  validateMemberOrganizationAccess,
 } from './tenants.query'
 
 export type {

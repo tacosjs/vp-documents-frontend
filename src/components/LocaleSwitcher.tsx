@@ -42,7 +42,11 @@ export const LocaleSwitcher = ({
         if (!locales.includes(value as (typeof locales)[number])) return
         if (me) {
           try {
-            await patchMe.mutateAsync({ preferred_locale: value })
+            await patchMe.mutateAsync({
+              displayName: null,
+              email: null,
+              preferredLocale: value,
+            })
           } catch {
             return
           }

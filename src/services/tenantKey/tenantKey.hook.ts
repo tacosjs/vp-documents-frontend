@@ -72,6 +72,7 @@ export const distributeWorkspaceKeyToMembers = async (
     )
     await postTenantKeyWrapping(tenantId, {
       userId: m.userId,
+      okKeyVersion: null,
       wrappedTenantKey: wrapped,
     })
   }

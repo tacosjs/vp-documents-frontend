@@ -13,11 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { useEncryptionSession } from '@/contexts/EncryptionSessionContext'
 import { m } from '@/paraglide/messages'
-import {
-  isChangePasswordWrongPasswordError,
-  useChangeAccountPasswordMutation,
-  useMeQuery,
-} from '@/services/auth'
+import { useInitiatePasswordChangeMutation, useMeQuery } from '@/services/auth'
 import {
   useGetUserKeysQuery,
   useRotateEncryptionKeysMutation,
@@ -30,14 +26,10 @@ export const SecuritySettingsView = () => {
   const { passphrase } = useEncryptionSession()
   const { data: me } = useMeQuery()
   const rotateMutation = useRotateEncryptionKeysMutation()
-  const changePasswordMutation = useChangeAccountPasswordMutation()
+  const changePasswordMutation = useInitiatePasswordChangeMutation()
 
   const [accountPassword, setAccountPassword] = useState('')
   const [phraseCopied, setPhraseCopied] = useState(false)
-
-  const [currentPw, setCurrentPw] = useState('')
-  const [newPw, setNewPw] = useState('')
-  const [confirmPw, setConfirmPw] = useState('')
 
   const handleRotate = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -59,25 +51,7 @@ export const SecuritySettingsView = () => {
 
   const handleChangePassword = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!me || !passphrase || !keys) return
-    if (newPw !== confirmPw) return
-    if (!currentPw.trim() || !newPw.trim()) return
-
-    changePasswordMutation.mutate(
-      {
-        dataPassphrase: passphrase,
-        email: me.email,
-        newPassword: newPw,
-        oldPassword: currentPw,
-      },
-      {
-        onSuccess: () => {
-          setCurrentPw('')
-          setNewPw('')
-          setConfirmPw('')
-        },
-      },
-    )
+    changePasswordMutation.mutate()
   }
 
   return (
@@ -93,64 +67,8 @@ export const SecuritySettingsView = () => {
         </p>
         <form className="flex flex-col gap-4" onSubmit={handleChangePassword}>
           <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="sec-current-pw">
-                {m['security.current_password']()}
-              </FieldLabel>
-              <Input
-                id="sec-current-pw"
-                autoComplete="current-password"
-                type="password"
-                value={currentPw}
-                onChange={(ev) => {
-                  setCurrentPw(ev.target.value)
-                  changePasswordMutation.reset()
-                }}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="sec-new-pw">
-                {m['security.new_password']()}
-              </FieldLabel>
-              <Input
-                id="sec-new-pw"
-                autoComplete="new-password"
-                type="password"
-                value={newPw}
-                onChange={(ev) => {
-                  setNewPw(ev.target.value)
-                  changePasswordMutation.reset()
-                }}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="sec-confirm-pw">
-                {m['security.confirm_new_password']()}
-              </FieldLabel>
-              <Input
-                id="sec-confirm-pw"
-                autoComplete="new-password"
-                type="password"
-                value={confirmPw}
-                onChange={(ev) => {
-                  setConfirmPw(ev.target.value)
-                  changePasswordMutation.reset()
-                }}
-              />
-            </Field>
-            {newPw.length > 0 && confirmPw.length > 0 && newPw !== confirmPw ? (
-              <p className="text-destructive text-sm">
-                {m['security.passwords_mismatch']()}
-              </p>
-            ) : null}
             {changePasswordMutation.isError ? (
-              <FieldError>
-                {isChangePasswordWrongPasswordError(
-                  changePasswordMutation.error,
-                )
-                  ? m['security.change_password_wrong_password']()
-                  : m['security.change_password_error']()}
-              </FieldError>
+              <FieldError>{m['security.change_password_error']()}</FieldError>
             ) : null}
             {changePasswordMutation.isSuccess ? (
               <p className="text-sm text-green-600 dark:text-green-500">
@@ -158,18 +76,7 @@ export const SecuritySettingsView = () => {
               </p>
             ) : null}
           </FieldGroup>
-          <Button
-            type="submit"
-            disabled={
-              changePasswordMutation.isPending ||
-              !passphrase ||
-              !keys ||
-              !me ||
-              !currentPw.trim() ||
-              !newPw.trim() ||
-              newPw !== confirmPw
-            }
-          >
+          <Button disabled={changePasswordMutation.isPending} type="submit">
             {changePasswordMutation.isPending
               ? m['security.change_password_submitting']()
               : m['security.change_password_submit']()}

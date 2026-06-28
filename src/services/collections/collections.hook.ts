@@ -31,7 +31,7 @@ export const useCollectionSymmetricKeyQuery = (
       if (!cid || !tenantId || !okQuery.data) {
         throw new Error('Missing collection key context')
       }
-      const col = await getCollection(tenantId, cid)
+      const col = await getCollection(cid)
       return unwrapRawKeyWithAes256Gcm(col.wrappedCollectionKey, okQuery.data)
     },
     enabled: Boolean(

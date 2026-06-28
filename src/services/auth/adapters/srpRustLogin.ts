@@ -145,6 +145,24 @@ export async function deriveLoginSessionRust(
     concatBytes(bigToBytesBE(aPub), bigToBytesBE(bPub), premasterBytes),
   )
 
+  // TEMP DEBUG — remove before shipping to production
+  console.debug(
+    '[SRP DEBUG] A :',
+    bytesToHex(bigToBytesBE(aPub)),
+    `(${bigToBytesBE(aPub).length}B)`,
+  )
+  console.debug(
+    '[SRP DEBUG] B :',
+    bytesToHex(bigToBytesBE(bPub)),
+    `(${bigToBytesBE(bPub).length}B)`,
+  )
+  console.debug(
+    '[SRP DEBUG] S :',
+    bytesToHex(premasterBytes),
+    `(${premasterBytes.length}B)`,
+  )
+  console.debug('[SRP DEBUG] M1:', bytesToHex(m1))
+
   return {
     aPubHex: bytesToHex(bigToBytesBE(aPub)),
     clientProofHex: bytesToHex(m1),

@@ -20,7 +20,7 @@ export type Me = {
    * Milliseconds since Unix epoch.
    */
   rotationPendingSinceMs: number | null
-  /** Workspace display name from `/api/me` when in a workspace. */
+  /** Workspace display name from `/me` when in a workspace. */
   tenantName: string | null
   /** Role in that workspace. */
   tenantRole: 'admin' | 'editor' | null
@@ -37,7 +37,7 @@ export type SignInMfaFormProps = {
   error: string | null
   isLoading: boolean
   setCode: Dispatch<SetStateAction<string>>
-  handleMfaVerify: (e: FormEvent<HTMLFormElement>) => void
+  handleMfaVerify: (e: React.SubmitEvent) => void
 }
 
 export type SignUpVerificationFormProps = {
@@ -46,5 +46,5 @@ export type SignUpVerificationFormProps = {
   isLoading: boolean
   setVerificationCode: Dispatch<SetStateAction<string>>
   verificationCode: string
-  handleVerification: (e: FormEvent<HTMLFormElement>) => void
+  handleVerification: (e: React.SubmitEvent) => void
 }

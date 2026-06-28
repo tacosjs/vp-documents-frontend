@@ -1,3 +1,5 @@
+import type { components } from '@tacosjs/vp-documents-api'
+
 import { ApiHttpError, apiJson, apiVoid } from '@/lib/http/apiClient'
 
 import type { Me } from '../auth.type'
@@ -101,28 +103,24 @@ function mapMeResponse(me: MeApiPayload): Me {
   }
 }
 
-export type PatchMeBody = {
-  display_name?: string
-  email?: string
-  preferred_locale?: string
-}
+export type PatchMeBody = components['schemas']['PatchMeRequest']
 
 export async function fetchMe(): Promise<Me | null> {
   try {
-    const me = await apiJson<MeApiPayload>('/api/me')
+    const me = await apiJson<MeApiPayload>('/me')
     return mapMeResponse(me)
   } catch (e) {
-    if (e instanceof ApiHttpError && e.status === 401) return null
+    if (e instanceof ApiHttpError && (e.status === 401 || e.status === 403))
+      return null
     throw e
   }
 }
 
-export async function patchMe(body: PatchMeBody): Promise<Me> {
-  const me = await apiJson<MeApiPayload>('/api/me', {
+export async function patchMe(body: PatchMeBody): Promise<void> {
+  await apiVoid('/me', {
     body: JSON.stringify(body),
     method: 'PATCH',
   })
-  return mapMeResponse(me)
 }
 
 export async function postLogout(): Promise<void> {
@@ -130,7 +128,7 @@ export async function postLogout(): Promise<void> {
 }
 
 export async function deleteMe(): Promise<void> {
-  await apiVoid('/api/me', { method: 'DELETE' })
+  await apiVoid('/me', { method: 'DELETE' })
 }
 
 export const useAuthQuery = () => ({

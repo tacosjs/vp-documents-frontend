@@ -1,0 +1,28 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.enable": true,
+  "eslint.options": {
+    "ignorePatterns": ["**/convex/_generated/**"]
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.watcherExclude": {
+    "**/convex/_generated/**": true,
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/convex/_generated/**": true,
+    "**/routeTree.gen.ts": true
+  }
+}

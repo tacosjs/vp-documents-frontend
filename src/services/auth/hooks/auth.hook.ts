@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -52,6 +51,7 @@ export const useMeQuery = () => {
   const mock = isMockAuth()
   return useQuery({
     queryKey: authKeys.me,
+    retry: false,
     queryFn: () => (mock ? authMock.getMockMe() : auth.fetchMe()),
   })
 }
@@ -117,7 +117,7 @@ export const useDeleteAccountMutation = () => {
           /* session may already be gone */
         }
       }
-      await navigate({ to: RoutesPath.SIGN_IN })
+      await navigate({ to: '/auth/signin' })
     },
   })
 }
@@ -144,7 +144,7 @@ export const useSignIn = (options?: {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (e: React.SubmitEvent) => {
     e.preventDefault()
     if (!email.trim()) return
 
@@ -159,9 +159,17 @@ export const useSignIn = (options?: {
         const loc = getLocale()
         if (locales.includes(loc)) {
           if (mockAuth) {
-            await authMock.mockPatchMe({ preferred_locale: loc })
+            await authMock.mockPatchMe({
+              displayName: null,
+              email: null,
+              preferredLocale: loc,
+            })
           } else {
-            await auth.patchMe({ preferred_locale: loc })
+            await auth.patchMe({
+              displayName: null,
+              email: null,
+              preferredLocale: loc,
+            })
           }
         }
 
@@ -220,7 +228,7 @@ export const useSignUp = (options?: { inviteToken?: string }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.SubmitEvent) => {
     e.preventDefault()
 
     if (password !== confirmPassword) {
@@ -274,9 +282,17 @@ export const useSignUp = (options?: { inviteToken?: string }) => {
         const loc = getLocale()
         if (locales.includes(loc)) {
           if (mockAuth) {
-            await authMock.mockPatchMe({ preferred_locale: loc })
+            await authMock.mockPatchMe({
+              displayName: null,
+              email: null,
+              preferredLocale: loc,
+            })
           } else {
-            await auth.patchMe({ preferred_locale: loc })
+            await auth.patchMe({
+              displayName: null,
+              email: null,
+              preferredLocale: loc,
+            })
           }
         }
 
@@ -323,7 +339,7 @@ export const useForgotPassword = () => {
   const [error, setError] = useState<string | null>(null)
   const [done, setDone] = useState(false)
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
     if (newPassword !== confirmPassword) {
       setError(m['forgot_password.passwords_mismatch']())
@@ -386,7 +402,7 @@ export const useUnlockEncryption = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleUnlock = async (e: FormEvent<HTMLFormElement>) => {
+  const handleUnlock = async (e: React.SubmitEvent) => {
     e.preventDefault()
     await withFormSubmit(
       async () => {
@@ -422,7 +438,7 @@ export const useSignInMfaForm = (): SignInMfaFormProps => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleMfaVerify = (e: FormEvent<HTMLFormElement>) => {
+  const handleMfaVerify = (e: React.SubmitEvent) => {
     e.preventDefault()
     setIsLoading(false)
     setError('Multi-factor authentication is not enabled yet.')
@@ -445,7 +461,7 @@ export const useSignUpVerificationForm = (
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleVerification = (e: FormEvent<HTMLFormElement>) => {
+  const handleVerification = (e: React.SubmitEvent) => {
     e.preventDefault()
     setIsLoading(false)
     setError('Email verification is not implemented yet.')

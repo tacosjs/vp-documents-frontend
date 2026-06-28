@@ -49,6 +49,7 @@ describe('distributeWorkspaceKeyToMembers', () => {
     expect(postTenantKeyWrapping).toHaveBeenCalledTimes(1)
     expect(postTenantKeyWrapping).toHaveBeenCalledWith('tid', {
       userId: 'u1',
+      okKeyVersion: null,
       wrappedTenantKey: 'armored-wrap',
     })
   })
@@ -107,6 +108,7 @@ describe('tryBootstrapWorkspaceKeyForTenant', () => {
     expect(postTenantKeyWrapping).toHaveBeenCalledTimes(1)
     expect(postTenantKeyWrapping).toHaveBeenCalledWith('tid', {
       userId: 'u1',
+      okKeyVersion: null,
       wrappedTenantKey: 'armored-wrap',
     })
   })

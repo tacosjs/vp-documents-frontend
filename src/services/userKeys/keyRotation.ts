@@ -133,10 +133,8 @@ export const rotateEncryptionKeys = async ({
     const wrapped = await wrapTenantSymmetricKeyForPublicKey(tsk, publicKey)
     await postTenantKeyWrapping(tenantId, {
       userId,
+      okKeyVersion: tenantWrapOkVersion ?? null,
       wrappedTenantKey: wrapped,
-      ...(tenantWrapOkVersion != null
-        ? { okKeyVersion: tenantWrapOkVersion }
-        : {}),
     })
   }
 

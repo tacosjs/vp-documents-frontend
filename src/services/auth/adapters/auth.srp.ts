@@ -12,9 +12,9 @@ import {
 } from './srpRustLogin'
 
 type LoginStartResponse = {
-  B: string
+  sessionId: string
+  b: string
   salt: string
-  session_id: string
 }
 
 type LoginConfirmResponse = {
@@ -45,16 +45,16 @@ export async function completeSrpLogin(
   const ephemeral = generateLoginEphemeral()
   const session = await deriveLoginSessionRust(
     ephemeral.secret,
-    start.B,
+    start.b,
     privateKey,
   )
 
   const confirm = await apiJson<LoginConfirmResponse>('/auth/login/confirm', {
     method: 'POST',
     body: JSON.stringify({
-      a_pub: session.aPubHex,
-      client_proof: session.clientProofHex,
-      session_id: start.session_id,
+      sessionId: start.sessionId,
+      aPub: session.aPubHex,
+      clientProof: session.clientProofHex,
     }),
   })
 
@@ -64,59 +64,6 @@ export async function completeSrpLogin(
     session.premasterBytes,
     confirm.server_proof,
   )
-}
-
-type MePasswordSrpConfirmResponse = {
-  password_change_token: string
-  server_proof: string
-}
-
-/** Authenticated SRP proof of current password (no new session cookie). */
-export async function completeMePasswordSrp(
-  email: string,
-  password: string,
-): Promise<string> {
-  if (typeof window === 'undefined') {
-    throw new Error('SRP authentication is only available in the browser')
-  }
-
-  const identity = normalizeEmail(email)
-
-  const start = await apiJson<LoginStartResponse>(
-    '/api/me/password/srp/start',
-    {
-      method: 'POST',
-    },
-  )
-
-  const privateKey = await deriveSrpPrivateKey(start.salt, identity, password)
-  const ephemeral = generateLoginEphemeral()
-  const session = await deriveLoginSessionRust(
-    ephemeral.secret,
-    start.B,
-    privateKey,
-  )
-
-  const confirm = await apiJson<MePasswordSrpConfirmResponse>(
-    '/api/me/password/srp/confirm',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        a_pub: session.aPubHex,
-        client_proof: session.clientProofHex,
-        session_id: start.session_id,
-      }),
-    },
-  )
-
-  await verifyLoginServerProofRust(
-    session.aPubHex,
-    session.clientProofHex,
-    session.premasterBytes,
-    confirm.server_proof,
-  )
-
-  return confirm.password_change_token
 }
 
 export async function registerWithSrp(

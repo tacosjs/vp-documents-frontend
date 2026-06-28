@@ -8,7 +8,7 @@ TanStack Start SPA that talks to the **Rust API** in `../backend`. Sensitive dat
 
 - **SRP-6a (SHA-256, 2048-bit group):** The server stores a **salt** and **verifier** only. Login proves knowledge of the password with **mutual proofs** (`client_proof` / `server_proof`); the password itself never leaves the client. This is a standard **PAKE** / **zero-knowledge-style password proof** — not zk-SNARKs.
 - **E2EE:** A BIP39-style data passphrase and OpenPGP keypair are created in the browser. The passphrase is encrypted with the **account password** (OpenPGP symmetric) before upload; the private key is stored encrypted. The server keeps **ciphertext** and the **public key** only.
-- **Documents:** Plaintext is encrypted with the user’s public key before `POST` or `PATCH`; the API persists **encrypted blobs** only. **Key rotation** uses `POST /api/me/keys/rotate` to replace keys and re-encrypted documents atomically (see Security in the app sidebar).
+- **Documents:** Plaintext is encrypted with the user’s public key before `POST` or `PATCH`; the API persists **encrypted blobs** only. **Key rotation** uses `POST me/keys/rotate` to replace keys and re-encrypted documents atomically (see Security in the app sidebar).
 
 Optional **device passphrase wrap** (`src/lib/crypto/devicePassphraseWrap.ts`) stores an AES-GCM–wrapped mnemonic in `localStorage` so refresh can avoid re-entering the login password. Treat this as a UX tradeoff: XSS on your origin remains a practical risk for any secret in the browser.
 

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
 
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -36,7 +35,6 @@ import {
   usePatchMemberRoleMutation,
   useRemoveMemberMutation,
   useTenantMembersQuery,
-  useValidateMemberOrganizationAccessMutation,
 } from '@/services/tenants'
 
 const DEFAULT_EXPIRES_SEC = 7 * 24 * 3600
@@ -60,7 +58,7 @@ export const TeamInvitesView = () => {
   const patchRole = usePatchMemberRoleMutation(tenantId)
   const removeMember = useRemoveMemberMutation(tenantId)
   const createInvitation = useCreateInvitationMutation(tenantId)
-  const validateAccess = useValidateMemberOrganizationAccessMutation(tenantId)
+  const [grantPending, setGrantPending] = useState(false)
   const tskQuery = useTenantSymmetricKeyQuery()
 
   const [role, setRole] = useState<'admin' | 'editor'>('editor')
@@ -76,7 +74,7 @@ export const TeamInvitesView = () => {
   const [memberError, setMemberError] = useState<string | null>(null)
   const [grantError, setGrantError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
     setInviteError(null)
     setResult(null)
@@ -130,8 +128,8 @@ export const TeamInvitesView = () => {
   const handleGrantOrganizationAccess = async (member: TenantMember) => {
     if (!tenantId) return
     setGrantError(null)
+    setGrantPending(true)
     try {
-      await validateAccess.mutateAsync(member.userId)
       const tsk = tskQuery.data
       if (tsk) {
         const fresh = await listMembers(tenantId, { includePublicKeys: true })
@@ -154,6 +152,8 @@ export const TeamInvitesView = () => {
           ? err.message
           : m['org.members.grant_organization_access_error'](),
       )
+    } finally {
+      setGrantPending(false)
     }
   }
 
@@ -242,14 +242,14 @@ export const TeamInvitesView = () => {
                       {!member.accessValidated &&
                       member.userId !== me.userId ? (
                         <Button
-                          disabled={validateAccess.isPending}
+                          disabled={grantPending}
                           type="button"
                           variant="secondary"
                           onClick={() =>
                             void handleGrantOrganizationAccess(member)
                           }
                         >
-                          {validateAccess.isPending
+                          {grantPending
                             ? m[
                                 'org.members.grant_organization_access_pending'
                               ]()

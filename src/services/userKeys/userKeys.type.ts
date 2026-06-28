@@ -1,3 +1,5 @@
+import type { components } from '@tacosjs/vp-documents-api'
+
 export type UserKeys = {
   encryptedPassphrase: string
   encryptedPrivateKey: string
@@ -27,18 +29,7 @@ export type SecurityActivityResponse = {
   events: Array<SecurityActivityEvent>
 }
 
-export type RotateKeysDocumentPayload = {
-  id: string
-  encryptedData: string
-  /** Present when rotating OpenPGP keys for `self_pgp` (per-item key) documents. */
-  wrappedItemKey?: string
-}
-
-export type RotateKeysPayload = UserKeys & {
-  documents: Array<RotateKeysDocumentPayload>
-  /** SHA-256 (hex) of normalized new recovery phrase; updates server recovery proof after rotation. */
-  recoveryPhraseSha256?: string
-}
+export type RotateKeysPayload = components['schemas']['RotateKeysRequest']
 
 export type RotateEncryptionKeysMutationVars = {
   accountPassword: string

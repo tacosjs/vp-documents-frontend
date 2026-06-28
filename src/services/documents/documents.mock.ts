@@ -88,16 +88,16 @@ export const createMockDocumentMutation = async (
   const id = faker.string.uuid()
   const doc: Document = {
     id,
-    collectionId: input.collectionId ?? null,
+    collectionId: input.collectionId,
     _id: id,
     createdAt: Date.now(),
     encryptedData: input.encryptedData,
-    okKeyVersion: input.okKeyVersion ?? null,
+    okKeyVersion: input.okKeyVersion,
     ownedByMe: true,
     shared: input.shared ?? false,
     updatedAt: Date.now(),
-    wrappedItemKey: input.wrappedItemKey ?? null,
-    wrapScheme: input.wrapScheme,
+    wrappedItemKey: input.wrappedItemKey,
+    wrapScheme: input.wrapScheme as Document['wrapScheme'],
   }
   mockStore.push(doc)
   return doc
@@ -113,13 +113,14 @@ export const updateMockDocumentMutation = async (
   }
   const doc = mockStore.find((d) => d.id === id)
   if (!doc) throw new Error('Not found')
-  if (input.encryptedData !== undefined) doc.encryptedData = input.encryptedData
-  if (input.shared !== undefined) doc.shared = input.shared
+  if (input.encryptedData != null) doc.encryptedData = input.encryptedData
+  if (input.shared != null) doc.shared = input.shared
   if (input.wrappedItemKey !== undefined)
     doc.wrappedItemKey = input.wrappedItemKey
   if (input.collectionId !== undefined) doc.collectionId = input.collectionId
   if (input.okKeyVersion !== undefined) doc.okKeyVersion = input.okKeyVersion
-  if (input.wrapScheme !== undefined) doc.wrapScheme = input.wrapScheme
+  if (input.wrapScheme != null)
+    doc.wrapScheme = input.wrapScheme as Document['wrapScheme']
   doc.updatedAt = Date.now()
   return doc
 }

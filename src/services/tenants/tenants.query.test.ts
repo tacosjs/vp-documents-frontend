@@ -27,7 +27,7 @@ describe('listMembers', () => {
     expect(rows[0]?.hasOrganizationKeyWrap).toBe(true)
 
     expect(apiJson).toHaveBeenCalledWith(
-      '/api/tenants/tenant-1/members?includePublicKeys=true',
+      '/tenants/tenant-1/members?includePublicKeys=true',
     )
   })
 
@@ -37,11 +37,11 @@ describe('listMembers', () => {
 
     await listMembers('tenant-2')
 
-    expect(apiJson).toHaveBeenCalledWith('/api/tenants/tenant-2/members')
+    expect(apiJson).toHaveBeenCalledWith('/tenants/tenant-2/members')
 
     vi.mocked(apiJson).mockResolvedValueOnce([])
     await listMembers('tenant-3', { includePublicKeys: false })
 
-    expect(apiJson).toHaveBeenCalledWith('/api/tenants/tenant-3/members')
+    expect(apiJson).toHaveBeenCalledWith('/tenants/tenant-3/members')
   })
 })

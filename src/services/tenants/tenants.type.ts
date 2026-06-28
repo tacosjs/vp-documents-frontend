@@ -1,17 +1,16 @@
+import type { components } from '@tacosjs/vp-documents-api'
+
 export type TenantSummary = {
   id: string
   name: string
   role: 'admin' | 'editor'
 }
 
-export type CreateTenantBody = {
-  name: string
-}
-
-export type CreateInvitationBody = {
-  expiresInSeconds?: number
-  role?: 'admin' | 'editor'
-}
+export type CreateTenantBody = components['schemas']['CreateTenantRequest']
+export type CreateInvitationBody =
+  components['schemas']['CreateInvitationRequest']
+export type PatchMemberRoleBody =
+  components['schemas']['PatchMemberRoleRequest']
 
 export type CreateInvitationResult = {
   expiresAtMs: number
@@ -37,9 +36,5 @@ export type TenantMember = {
    * requested with `includePublicKeys: true` (large payload).
    */
   publicKey: string
-  role: 'admin' | 'editor'
-}
-
-export type PatchMemberRoleBody = {
   role: 'admin' | 'editor'
 }

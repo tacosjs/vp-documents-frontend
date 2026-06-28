@@ -29,6 +29,4 @@ export {
   useUnlockEncryption,
 } from './hooks/auth.hook'
 
-export { useChangeAccountPasswordMutation } from './hooks/auth.password.hook'
-
-export type { ChangeAccountPasswordVars } from './hooks/auth.password.hook'
+export { useInitiatePasswordChangeMutation } from './hooks/auth.password.hook'

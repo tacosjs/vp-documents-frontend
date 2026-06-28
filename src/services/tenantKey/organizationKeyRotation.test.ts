@@ -105,7 +105,6 @@ describe('performOrganizationKeyRotation', () => {
       't1',
       expect.objectContaining({
         okKeyVersion: 3,
-        wrappings: [{ userId: 'u1', wrappedTenantKey: 'armored' }],
         collectionRewraps: [
           expect.objectContaining({
             collectionId: 'c1',
@@ -117,6 +116,9 @@ describe('performOrganizationKeyRotation', () => {
             documentId: 'd-org',
             okKeyVersion: 3,
           }),
+        ],
+        wrappings: [
+          { userId: 'u1', okKeyVersion: 3, wrappedTenantKey: 'armored' },
         ],
       }),
     )

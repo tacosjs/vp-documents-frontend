@@ -17,7 +17,6 @@ import {
   patchMemberRole,
   previewInvitation,
   removeMember,
-  validateMemberOrganizationAccess,
 } from './tenants.query'
 import type {
   CreateInvitationBody,
@@ -148,35 +147,6 @@ export function useRemoveMemberMutation(tenantId: string | null) {
       if (tenantId) {
         await queryClient.invalidateQueries({
           queryKey: tenantKeys.members(tenantId),
-        })
-      }
-      await queryClient.invalidateQueries({ queryKey: authKeys.me })
-    },
-  })
-}
-
-export function useValidateMemberOrganizationAccessMutation(
-  tenantId: string | null,
-) {
-  const queryClient = useQueryClient()
-  const mock = isMockAuth()
-
-  return useMutation({
-    mutationFn: (userId: string) => {
-      if (!tenantId) {
-        throw new Error('No active tenant')
-      }
-      return mock
-        ? Promise.resolve()
-        : validateMemberOrganizationAccess(tenantId, userId)
-    },
-    onSuccess: async () => {
-      if (tenantId) {
-        await queryClient.invalidateQueries({
-          queryKey: tenantKeys.members(tenantId),
-        })
-        await queryClient.invalidateQueries({
-          queryKey: ['organizationKeyMissingWraps'],
         })
       }
       await queryClient.invalidateQueries({ queryKey: authKeys.me })

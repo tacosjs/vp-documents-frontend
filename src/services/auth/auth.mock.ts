@@ -65,30 +65,29 @@ export const mockCompleteSrpLogin = async (
   }
 }
 
-export const mockPatchMe = async (body: PatchMeBody): Promise<Me> => {
+export const mockPatchMe = async (body: PatchMeBody): Promise<void> => {
   await delay(30)
   if (!mockSession) {
     throw new Error('Not authenticated')
   }
   let next = mockSession
-  if (body.display_name !== undefined) {
-    const trimmed = body.display_name.trim()
+  if (body.displayName != null) {
+    const trimmed = body.displayName.trim()
     next = {
       ...next,
       displayName: trimmed.length === 0 ? null : trimmed,
     }
   }
-  if (body.email !== undefined) {
+  if (body.email != null) {
     next = { ...next, email: normalizeEmail(body.email) }
   }
-  if (body.preferred_locale !== undefined) {
+  if (body.preferredLocale != null) {
     next = {
       ...next,
-      preferredLocale: body.preferred_locale.trim(),
+      preferredLocale: body.preferredLocale.trim(),
     }
   }
   mockSession = next
-  return next
 }
 
 /** Mock password change: only updates the password remembered for mock key ops. */

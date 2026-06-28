@@ -91,6 +91,7 @@ export const DocumentCreationView = () => {
         const wrappedItemKey = await wrapRawKeyWithAes256Gcm(ik, tsk)
         const okKeyVersion = me.organizationKeyVersion ?? 1
         await createDocument({
+          collectionId: null,
           encryptedData: encryptedMessage,
           encryptedHistoryPayload,
           okKeyVersion,
@@ -110,7 +111,10 @@ export const DocumentCreationView = () => {
           keys.publicKey,
         )
         await createDocument({
+          collectionId: null,
           encryptedData: encryptedMessage,
+          encryptedHistoryPayload: null,
+          okKeyVersion: null,
           shared: false,
           wrappedItemKey,
           wrapScheme: 'self_pgp',
